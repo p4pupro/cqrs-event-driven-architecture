@@ -1,4 +1,4 @@
-package es.dperez.command.application.controller;
+package es.dperez.command.infrasturcture.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -15,8 +15,6 @@ import es.dperez.command.domain.exception.DeviceNotFoundException;
 import es.dperez.command.domain.exception.JsonParsingException;
 import es.dperez.command.domain.model.Device;
 import es.dperez.command.application.service.device.DeviceCommandService;
-import es.dperez.command.infrasturcture.controller.DeviceCommandController;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

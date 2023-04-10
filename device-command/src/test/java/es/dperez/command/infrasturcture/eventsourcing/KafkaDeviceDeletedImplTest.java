@@ -1,4 +1,4 @@
-package es.dperez.command.application.eventsourcing;
+package es.dperez.command.infrasturcture.eventsourcing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -8,8 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.dperez.command.domain.exception.JsonParsingException;
 import es.dperez.command.domain.model.Device;
 import java.util.UUID;
-
-import es.dperez.command.infrasturcture.eventsourcing.KafkaDeviceUpdatedImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -25,7 +23,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
-public class KafkaDeviceUpdateImplTest {
+public class KafkaDeviceDeletedImplTest {
 
     @Mock
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -34,18 +32,18 @@ public class KafkaDeviceUpdateImplTest {
     private ObjectMapper objectMapper;
 
     @InjectMocks
-    private KafkaDeviceUpdatedImpl kafkaDeviceUpdatedImpl;
+    private KafkaDeviceDeletedImpl kafkaDeviceDeletedImpl;
 
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(kafkaDeviceUpdatedImpl, "topicUpdateDevice", "update-device");
+        ReflectionTestUtils.setField(kafkaDeviceDeletedImpl, "topicDeleteDevice", "delete-device");
     }
 
     @Test
-    void should_public_update_device_topic() throws JsonParsingException, JsonProcessingException {
+    void should_public_delete_device_topic() throws JsonParsingException, JsonProcessingException {
         // Given
-        final String expectedTopic = "update-device";
+        final String expectedTopic = "delete-device";
         final Device device = Device.builder()
             .name("Macbook").mark("Apple")
             .model("Pro M1 14inch").color("Space Grey")
@@ -53,7 +51,7 @@ public class KafkaDeviceUpdateImplTest {
             .build();
 
         // When
-        kafkaDeviceUpdatedImpl.publishDeviceUpdatedEvent(device);
+        kafkaDeviceDeletedImpl.publishDeviceDeleteEvent(device);
 
         // Then
         ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);

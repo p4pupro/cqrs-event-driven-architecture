@@ -1,4 +1,4 @@
-package es.dperez.command.application.eventsourcing;
+package es.dperez.command.infrasturcture.eventsourcing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -8,8 +8,6 @@ import es.dperez.command.domain.exception.JsonParsingException;
 import es.dperez.command.domain.model.Device;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.UUID;
-
-import es.dperez.command.infrasturcture.eventsourcing.KafkaDeviceCreatedImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
