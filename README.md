@@ -98,6 +98,11 @@ Previously do you need run the system:
 docker-compose up -d
 ```
 Then in terminal over performance-test path run:
+- first time
+```bash
+mvn clean verify
+```
+- followings:
 ```bash
 mvn jmeter:jmeter
 ```
