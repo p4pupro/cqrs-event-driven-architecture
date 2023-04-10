@@ -33,6 +33,11 @@ In the next diagram you can look how this project was designed:
 
 ![diagram](./resources/diagram.svg)
 
+
+These are all the use cases available to users:
+
+![use-case](./resources/use-case.svg)
+
 ## Requirements 📋
 To run this project you need install next requirements:
 - [jdk17](https://docs.aws.amazon.com/corretto/latest/corretto-17-ug/downloads-list.html)
