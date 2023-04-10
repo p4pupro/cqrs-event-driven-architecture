@@ -1,0 +1,136 @@
+version: '3.8'
+
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - cqrs-network
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_PORT: 2181
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOO_SERVERS: server.1=zookeeper:2888:3888
+      ALLOW_ANONYMOUS_LOGIN: yes
+    volumes:
+      - ./zook-kafka/zookeeper/data:/data
+      - ./zook-kafka/zookeeper/datalog:/datalog
+
+  mysql-command:
+    image: mysql:latest
+    container_name: mysql-command
+    hostname: mysql-command
+    environment:
+      MYSQL_ROOT_PASSWORD: FNQXvAzNCew6YMkdnDAp79bpT4ub
+      MYSQL_DATABASE: sales
+    ports:
+      - "30000:3306"
+    networks:
+      - cqrs-network
+    volumes:
+      - ./init-mysql.sql:/docker-entrypoint-initdb.d/mysql-init.sql:ro
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-psecret" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mongo-query:
+    image: mongo:4.4.3
+    container_name: mongo-query
+    hostname: mongo-query
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: query_user
+      MONGO_INITDB_ROOT_PASSWORD: FNQXvAzNCew6YMkdnDAp79bpT4ub
+      MONGO_INITDB_DATABASE: sales
+    command: ["--bind_ip_all"]
+    ports:
+      - "30001:27017"
+    networks:
+      - cqrs-network
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "mongo --eval \"db.adminCommand({ping:1}).ok\" | grep -q 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka
+    ports:
+      - "29092:29092"
+    environment:
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+      KAFKA_CREATE_TOPICS: create-device:1:1,update-device:1:1,delete-device:1:1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_BROKER_ID: 1
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    volumes:
+      - ./zook-kafka/kafka/data:/var/lib/kafka/data
+    depends_on:
+      - zookeeper
+    networks:
+      - cqrs-network
+    healthcheck:
+      test: [ "CMD", "nc", "-vz", "localhost", "9092" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  device-command:
+    build:
+      context: .
+      dockerfile: ./device-command/Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-command:3306/sales?useSSL=true
+      SPRING_DATASOURCE_USERNAME: command_user
+      SPRING_DATASOURCE_PASSWORD: FNQXvAzNCew6YMkdnDAp79bpT4ub
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_CONSUMER_GROUP_ID: device-consumer-group
+    depends_on:
+      mysql-command:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - cqrs-network
+
+  device-query:
+    build:
+      context: .
+      dockerfile: ./device-query/Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      MONGO_HOST: mongo-query
+      MONGO_PORT: 27017
+      MONGO_USERNAME: query_user
+      MONGO_PASSWORD: FNQXvAzNCew6YMkdnDAp79bpT4ub
+      MONGO_DB_NAME: sales
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_CONSUMER_GROUP_ID: device-consumer-group
+    depends_on:
+      mongo-query:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - cqrs-network
+
+networks:
+  cqrs-network:
+    driver: bridge
