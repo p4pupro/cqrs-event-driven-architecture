@@ -1,4 +1,4 @@
-package es.dperez.query.application.controller;
+package es.dperez.query.infrastructure.controller;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import es.dperez.query.application.dto.DeviceResponse;
 import es.dperez.query.application.exception.FindDeviceException;
 import es.dperez.query.domain.exception.DeviceNotFoundException;
-import es.dperez.query.domain.service.DeviceQueryService;
+import es.dperez.query.application.service.DeviceQueryService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

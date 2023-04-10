@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.dperez.query.application.controller.DeviceQueryController;
+import es.dperez.query.infrastructure.controller.DeviceQueryController;
 import es.dperez.query.application.dto.DeviceResponse;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -23,8 +23,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @CucumberContextConfiguration

@@ -1,9 +1,9 @@
-package es.dperez.query.application.controller;
+package es.dperez.query.infrastructure.controller;
 
 import es.dperez.query.application.dto.DeviceResponse;
 import es.dperez.query.application.exception.FindDeviceException;
 import es.dperez.query.domain.exception.DeviceNotFoundException;
-import es.dperez.query.domain.service.DeviceQueryService;
+import es.dperez.query.application.service.DeviceQueryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

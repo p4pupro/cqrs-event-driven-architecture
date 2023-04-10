@@ -7,7 +7,7 @@ import static org.mockito.Mockito.verify;
 
 import es.dperez.query.domain.exception.DeviceNotFoundException;
 import es.dperez.query.domain.model.Device;
-import es.dperez.query.domain.service.DeviceQueryService;
+import es.dperez.query.application.service.DeviceQueryService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,13 +19,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 
 @ExtendWith(MockitoExtension.class)
-public class KafkaUpdateDeviceEventListenerTest {
+public class KafkaUpdateDeviceEventListenerImplTest {
 
     @Mock
     private DeviceQueryService deviceQueryService;
 
     @InjectMocks
-    private KafkaUpdateDeviceEventListener listener;
+    private KafkaUpdateDeviceEventListenerImpl listener;
 
     @Captor
     private ArgumentCaptor<Device> deviceCaptor;
@@ -39,7 +39,7 @@ public class KafkaUpdateDeviceEventListenerTest {
         doNothing().when(deviceQueryService).updateDevice(any(Device.class));
 
         // When
-        listener.listen(record);
+        listener.updateListener(record);
 
         // Then
         verify(deviceQueryService).updateDevice(deviceCaptor.capture());

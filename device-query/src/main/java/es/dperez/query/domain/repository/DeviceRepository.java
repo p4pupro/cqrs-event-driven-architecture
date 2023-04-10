@@ -1,4 +1,4 @@
-package es.dperez.query.infrastructure.repository;
+package es.dperez.query.domain.repository;
 
 import es.dperez.query.domain.model.Device;
 import org.springframework.data.mongodb.repository.MongoRepository;
