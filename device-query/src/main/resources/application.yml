@@ -1,0 +1,15 @@
+server:
+    port: 8082
+spring:
+  data:
+    mongodb:
+      uri: mongodb://${MONGO_USERNAME:query_user}:${MONGO_PASSWORD:FNQXvAzNCew6YMkdnDAp79bpT4ub}@${MONGO_HOST:localhost}:${MONGO_PORT:30001}/${MONGO_DB_NAME:sales}?authSource=admin
+  kafka:
+    bootstrap-servers: localhost:29092
+    consumer:
+      group-id: device-consumer-group
+message:
+  topic:
+    createDevice: create-device
+    updateDevice: update-device
+    deleteDevice: delete-device
