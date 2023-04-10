@@ -1,4 +1,4 @@
-package es.dperez.command.infrasturcture.eventsourcing.events;
+package es.dperez.command.application.eventsourcing.events;
 
 import es.dperez.command.domain.model.Device;
 import lombok.Builder;

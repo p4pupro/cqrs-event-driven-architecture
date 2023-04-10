@@ -1,13 +1,15 @@
-package es.dperez.command.infrasturcture.eventsourcing;
+package es.dperez.command.application.eventsourcing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import es.dperez.command.domain.exception.JsonParsingException;
 import es.dperez.command.domain.model.Device;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.UUID;
+
+import es.dperez.command.infrasturcture.eventsourcing.KafkaDeviceCreatedImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -23,7 +25,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
-public class KafkaDeviceDeletedEventSourcingTest {
+public class KafkaDeviceCreatedImplTest {
 
     @Mock
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -32,18 +34,18 @@ public class KafkaDeviceDeletedEventSourcingTest {
     private ObjectMapper objectMapper;
 
     @InjectMocks
-    private KafkaDeviceDeletedEventSourcing kafkaDeviceDeletedEventSourcing;
+    private KafkaDeviceCreatedImpl kafkaDeviceCreatedImpl;
 
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(kafkaDeviceDeletedEventSourcing, "topicDeleteDevice", "delete-device");
+        ReflectionTestUtils.setField(kafkaDeviceCreatedImpl, "topicCreateDevice", "create-device");
     }
 
     @Test
-    void should_public_delete_device_topic() throws JsonParsingException, JsonProcessingException {
+    void should_public_create_device_topic() throws JsonParsingException, JsonProcessingException {
         // Given
-        final String expectedTopic = "delete-device";
+        final String expectedTopic = "create-device";
         final Device device = Device.builder()
             .name("Macbook").mark("Apple")
             .model("Pro M1 14inch").color("Space Grey")
@@ -51,7 +53,7 @@ public class KafkaDeviceDeletedEventSourcingTest {
             .build();
 
         // When
-        kafkaDeviceDeletedEventSourcing.publicDeleteDeviceEvent(device);
+        kafkaDeviceCreatedImpl.publishDeviceCreatedEvent(device);
 
         // Then
         ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);

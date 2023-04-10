@@ -2,43 +2,43 @@ package es.dperez.command.infrasturcture.eventsourcing;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import es.dperez.command.application.eventsourcing.EventCreatedPublisher;
+import es.dperez.command.application.eventsourcing.events.DeviceCreatedEvent;
 import es.dperez.command.domain.exception.JsonParsingException;
 import es.dperez.command.domain.model.Device;
-import es.dperez.command.infrasturcture.eventsourcing.events.DeviceUpdateEvent;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
-
+import java.util.UUID;
 
 @Component
-public class KafkaDeviceUpdatedEventSourcing {
+public class KafkaDeviceCreatedImpl implements EventCreatedPublisher {
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-    private final Logger logger = LoggerFactory.getLogger(KafkaDeviceUpdatedEventSourcing.class);
+    private final Logger logger = LoggerFactory.getLogger(KafkaDeviceCreatedImpl.class);
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    private static final String MESSAGE_RESPONSE = "Your update request has been received";
+    private static final String MESSAGE_RESPONSE = "Your creation request has been received";
 
-    public KafkaDeviceUpdatedEventSourcing(final KafkaTemplate<String, String> kafkaTemplate, final ObjectMapper objectMapper) {
+    public KafkaDeviceCreatedImpl(final KafkaTemplate<String, String> kafkaTemplate, final ObjectMapper objectMapper) {
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
     }
 
-    @Value(value = "${message.topic.updateDevice}")
-    private String topicUpdateDevice;
+    @Value(value = "${message.topic.createDevice}")
+    private String topicCreateDevice;
 
-    public DeviceUpdateEvent publicUpdateDeviceEvent(final Device device) throws JsonParsingException {
+    public DeviceCreatedEvent publishDeviceCreatedEvent(final Device device) throws JsonParsingException {
         final var uuid = UUID.randomUUID();
         try {
             final var json = objectMapper.writeValueAsString(device);
-            logger.info("Send json '{}' to topic {}", json, topicUpdateDevice);
-            kafkaTemplate.send(topicUpdateDevice, json);
-            return DeviceUpdateEvent.builder()
+            logger.info("Send json '{}' to topic {}", json, topicCreateDevice);
+            kafkaTemplate.send(topicCreateDevice, json);
+            return DeviceCreatedEvent.builder()
                 .uuid(uuid)
                 .device(device)
                 .message(MESSAGE_RESPONSE)

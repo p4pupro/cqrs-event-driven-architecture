@@ -1,4 +1,4 @@
-package es.dperez.command.infrasturcture.repository;
+package es.dperez.command.domain.repository;
 
 import es.dperez.command.domain.model.Device;
 import java.util.Optional;

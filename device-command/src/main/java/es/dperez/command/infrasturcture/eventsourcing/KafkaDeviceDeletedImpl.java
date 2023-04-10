@@ -2,9 +2,10 @@ package es.dperez.command.infrasturcture.eventsourcing;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import es.dperez.command.application.eventsourcing.EventDeletePublisher;
+import es.dperez.command.application.eventsourcing.events.DeviceDeleteEvent;
 import es.dperez.command.domain.exception.JsonParsingException;
 import es.dperez.command.domain.model.Device;
-import es.dperez.command.infrasturcture.eventsourcing.events.DeviceDeleteEvent;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,17 +14,17 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class KafkaDeviceDeletedEventSourcing {
+public class KafkaDeviceDeletedImpl implements EventDeletePublisher {
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-    private final Logger logger = LoggerFactory.getLogger(KafkaDeviceDeletedEventSourcing.class);
+    private final Logger logger = LoggerFactory.getLogger(KafkaDeviceDeletedImpl.class);
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     private static final String MESSAGE_RESPONSE = "Your deletion request has been received";
 
-    public KafkaDeviceDeletedEventSourcing(final KafkaTemplate<String, String> kafkaTemplate, final ObjectMapper objectMapper) {
+    public KafkaDeviceDeletedImpl(final KafkaTemplate<String, String> kafkaTemplate, final ObjectMapper objectMapper) {
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
     }
@@ -31,7 +32,7 @@ public class KafkaDeviceDeletedEventSourcing {
     @Value(value = "${message.topic.deleteDevice}")
     private String topicDeleteDevice;
 
-    public DeviceDeleteEvent publicDeleteDeviceEvent(final Device device) throws JsonParsingException {
+    public DeviceDeleteEvent publishDeviceDeleteEvent(final Device device) throws JsonParsingException {
         final var uuid = UUID.randomUUID();
         try {
             final var json = objectMapper.writeValueAsString(device);

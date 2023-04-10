@@ -1,4 +1,4 @@
-package es.dperez.command.infrasturcture.eventsourcing;
+package es.dperez.command.application.eventsourcing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.dperez.command.domain.exception.JsonParsingException;
 import es.dperez.command.domain.model.Device;
 import java.util.UUID;
+
+import es.dperez.command.infrasturcture.eventsourcing.KafkaDeviceUpdatedImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -23,7 +25,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
-public class KafkaDeviceUpdateEventSourcingTest {
+public class KafkaDeviceUpdateImplTest {
 
     @Mock
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -32,12 +34,12 @@ public class KafkaDeviceUpdateEventSourcingTest {
     private ObjectMapper objectMapper;
 
     @InjectMocks
-    private KafkaDeviceUpdatedEventSourcing kafkaDeviceUpdatedEventSourcing;
+    private KafkaDeviceUpdatedImpl kafkaDeviceUpdatedImpl;
 
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(kafkaDeviceUpdatedEventSourcing, "topicUpdateDevice", "update-device");
+        ReflectionTestUtils.setField(kafkaDeviceUpdatedImpl, "topicUpdateDevice", "update-device");
     }
 
     @Test
@@ -51,7 +53,7 @@ public class KafkaDeviceUpdateEventSourcingTest {
             .build();
 
         // When
-        kafkaDeviceUpdatedEventSourcing.publicUpdateDeviceEvent(device);
+        kafkaDeviceUpdatedImpl.publishDeviceUpdatedEvent(device);
 
         // Then
         ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);

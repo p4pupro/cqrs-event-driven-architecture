@@ -1,6 +1,7 @@
 package es.dperez.command.infrasturcture.repository;
 
 import es.dperez.command.domain.model.Device;
+import es.dperez.command.domain.repository.DeviceRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

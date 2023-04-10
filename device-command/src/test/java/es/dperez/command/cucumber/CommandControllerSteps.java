@@ -4,14 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import es.dperez.command.application.controller.DeviceCommandController;
+import es.dperez.command.application.eventsourcing.events.DeviceCreatedEvent;
+import es.dperez.command.application.eventsourcing.events.DeviceUpdateEvent;
+import es.dperez.command.application.eventsourcing.events.DeviceDeleteEvent;
+import es.dperez.command.infrasturcture.controller.DeviceCommandController;
 import es.dperez.command.application.dto.CreateDeviceRequest;
 import es.dperez.command.application.dto.UpdateDeviceRequest;
 import es.dperez.command.application.exception.FindDeviceException;
 import es.dperez.command.domain.exception.JsonParsingException;
-import es.dperez.command.infrasturcture.eventsourcing.events.DeviceCreatedEvent;
-import es.dperez.command.infrasturcture.eventsourcing.events.DeviceDeleteEvent;
-import es.dperez.command.infrasturcture.eventsourcing.events.DeviceUpdateEvent;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

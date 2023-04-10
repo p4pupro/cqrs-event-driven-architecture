@@ -1,4 +1,4 @@
-package es.dperez.command.domain.converter;
+package es.dperez.command.application.dto.mapper;
 
 import es.dperez.command.application.dto.CreateDeviceRequest;
 import es.dperez.command.application.dto.UpdateDeviceRequest;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-public class DeviceConverter {
+public class MapperDevice {
 
     public Device createDeviceRequestToDevice(CreateDeviceRequest req) {
         return Device.builder()
