@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>cqrs-eda</artifactId>
+    <groupId>es.dperez</groupId>
+    <version>0.0.1</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>performance-test</artifactId>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.jmeter</groupId>
+      <artifactId>ApacheJMeter_core</artifactId>
+      <version>5.4.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.lazerycode.jmeter</groupId>
+      <artifactId>jmeter-maven-plugin</artifactId>
+      <version>2.6.0</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.lazerycode.jmeter</groupId>
+        <artifactId>jmeter-maven-plugin</artifactId>
+        <version>2.6.0</version>
+        <executions>
+          <execution>
+            <id>jmeter-tests</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jmeter</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <testFilesDirectory>${project.basedir}/src/main/resources</testFilesDirectory>
+          <testFilesIncluded>
+            <testFilesIncluded>01-post-test.jmx</testFilesIncluded>
+            <testFilesIncluded>02-get-test.jmx</testFilesIncluded>
+            <testFilesIncluded>03-put-test.jmx</testFilesIncluded>
+            <testFilesIncluded>04-delete-test.jmx</testFilesIncluded>
+          </testFilesIncluded>
+          <resultsDirectory>${project.basedir}/src/main/jmeter/results</resultsDirectory>
+          <reportDirectory>${project.basedir}/src/main/jmeter/reports</reportDirectory>
+          <testResultsTimestamp>false</testResultsTimestamp>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
