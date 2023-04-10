@@ -1,10 +1,10 @@
-package es.dperez.query.domain.service;
+package es.dperez.query.application.service;
 
+import es.dperez.query.application.device.find.FindDevice;
 import es.dperez.query.application.dto.DeviceResponse;
-import es.dperez.query.domain.converter.DeviceConverter;
 import es.dperez.query.domain.exception.DeviceNotFoundException;
 import es.dperez.query.domain.model.Device;
-import es.dperez.query.infrastructure.repository.DeviceRepository;
+import es.dperez.query.domain.repository.DeviceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,20 +16,17 @@ public class DeviceQueryService {
 
     private final DeviceRepository deviceRepository;
 
-    private final DeviceConverter deviceConverter;
+    private final FindDevice findDevice;
 
     private static final String DEVICE_NOT_FOUND = "Device not found";
 
-    public DeviceQueryService(final DeviceRepository deviceRepository,
-        final DeviceConverter deviceConverter) {
+    public DeviceQueryService(final DeviceRepository deviceRepository, final FindDevice findDevice) {
         this.deviceRepository = deviceRepository;
-        this.deviceConverter = deviceConverter;
+        this.findDevice = findDevice;
     }
 
     public DeviceResponse findByName(final String name) throws DeviceNotFoundException {
-        final Device device = deviceRepository.findByName(name).orElseThrow(() -> new DeviceNotFoundException(name, DEVICE_NOT_FOUND));
-        logger.info("Find device: {}", device);
-        return deviceConverter.deviceToDeviceResponse(device);
+        return findDevice.findByName(name);
     }
 
     public void createDevice(final Device p) {

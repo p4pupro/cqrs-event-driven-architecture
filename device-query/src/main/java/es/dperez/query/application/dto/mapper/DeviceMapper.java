@@ -1,11 +1,11 @@
-package es.dperez.query.domain.converter;
+package es.dperez.query.application.dto.mapper;
 
 import es.dperez.query.application.dto.DeviceResponse;
 import es.dperez.query.domain.model.Device;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DeviceConverter {
+public class DeviceMapper {
 
     public DeviceResponse deviceToDeviceResponse(Device p) {
         return DeviceResponse.builder()
