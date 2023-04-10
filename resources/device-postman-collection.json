@@ -1,0 +1,217 @@
+{
+	"info": {
+		"_postman_id": "5cd36677-0717-4099-99e0-82d2a0021f2b",
+		"name": "TFG",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET DEVICE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const expectedStatus = 200;",
+							"",
+							"const expectedJson = {",
+							"    \"color\": \"Space Grey\",",
+							"    \"model\": \"Pro M1 14inch\",",
+							"    \"name\": \"Macbook\",",
+							"    \"price\": 2250.99",
+							"}",
+							"",
+							"const expectedUpdatedJson = {",
+							"    \"color\": \"Silver\",",
+							"    \"model\": \"Pro M2 14inch\",",
+							"    \"name\": \"Macbook\",",
+							"    \"price\": 3350.99",
+							"}",
+							"",
+							"pm.test(\"Response status: \" + expectedStatus, function () {",
+							"    pm.response.to.have.status(expectedStatus);",
+							"});",
+							"",
+							"pm.test(\"Response body\", function () {",
+							"    pm.response.to.be.json;",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(expectedJson).to.eql(responseJson);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8082/device/Macbook",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"device",
+						"Macbook"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST DEVICE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const expectedStatus = 202;",
+							"",
+							"pm.test(\"Response status: \" + expectedStatus, function () {",
+							"    pm.response.to.have.status(expectedStatus);",
+							"});",
+							"",
+							"pm.test(\"Response body\", function () {",
+							"    pm.expect(pm.response.json()).to.have.property(\"uuid\");",
+							"    pm.expect(pm.response.json()).to.have.property(\"device\");",
+							"    pm.expect(pm.response.json()).to.have.property(\"message\", \"Your creation request has been received\");",
+							"",
+							"    pm.expect(pm.response.json().device).to.have.property(\"name\", \"Macbook\");",
+							"    pm.expect(pm.response.json().device).to.have.property(\"mark\", \"Apple\");",
+							"    pm.expect(pm.response.json().device).to.have.property(\"model\", \"Pro M1 14inch\");",
+							"    pm.expect(pm.response.json().device).to.have.property(\"color\", \"Space Grey\");",
+							"    pm.expect(pm.response.json().device).to.have.property(\"price\", 2250.99);",
+							"    pm.expect(pm.response.json().device).to.have.property(\"serviceId\");",
+							"    pm.expect(pm.response.json().device).to.have.property(\"creationDate\");",
+							"    pm.expect(pm.response.json().device).to.have.property(\"updatedDate\", null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Macbook\",\n    \"mark\": \"Apple\",\n    \"model\": \"Pro M1 14inch\",\n    \"color\": \"Space Grey\",\n    \"price\": 2250.99\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/device",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"device"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT DEVICE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const expectedStatus = 202;",
+							"",
+							"pm.test(\"Response status: \" + expectedStatus, function () {",
+							"    pm.response.to.have.status(expectedStatus);",
+							"});",
+							"",
+							"pm.test(\"Response body\", function () {",
+							"    pm.expect(pm.response.json()).to.have.property(\"uuid\");",
+							"    pm.expect(pm.response.json()).to.have.property(\"device\");",
+							"    pm.expect(pm.response.json()).to.have.property(\"message\", \"Your update request has been received\");",
+							"",
+							"    pm.expect(pm.response.json().device).to.have.property(\"name\", \"Macbook\");",
+							"    pm.expect(pm.response.json().device).to.have.property(\"mark\", \"Apple\");",
+							"    pm.expect(pm.response.json().device).to.have.property(\"model\", \"Pro M2 14inch\");",
+							"    pm.expect(pm.response.json().device).to.have.property(\"color\", \"Silver\");",
+							"    pm.expect(pm.response.json().device).to.have.property(\"price\", 3350.99);",
+							"    pm.expect(pm.response.json().device).to.have.property(\"serviceId\");",
+							"    pm.expect(pm.response.json().device).to.have.property(\"creationDate\");",
+							"    pm.expect(pm.response.json().device).to.have.property(\"updatedDate\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Macbook\",\n    \"mark\": \"Apple\",\n    \"model\": \"Pro M2 14inch\",\n    \"color\": \"Silver\",\n    \"price\": 3350.99\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/device/Macbook",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"device",
+						"Macbook"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE DEVICE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const expectedStatus = 202;",
+							"",
+							"pm.test(\"Response status: \" + expectedStatus, function () {",
+							"    pm.response.to.have.status(expectedStatus);",
+							"});",
+							"",
+							"pm.test(\"Response body\", function () {",
+							"    pm.expect(pm.response.json()).to.have.property(\"uuid\");",
+							"     pm.expect(pm.response.json()).to.have.property(\"message\", \"Your deletion request has been received\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8081/device/Macbook",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"device",
+						"Macbook"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
